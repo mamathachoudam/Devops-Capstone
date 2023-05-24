@@ -1,0 +1,28 @@
+- name: Create Container
+  hosts: localhost
+  tasks:
+  - name: BeverageStore web container
+    docker_container:
+      name: BeverageStore
+      image:  nkumarv/myjenkins:1.0.0
+      state: started
+      ports:
+      - "1100:8080"
+      tty: true
+      detach: true
+
+  - name: cAdvisor web container
+    docker_container:
+      name: cadvisor
+      image: google/cadvisor:latest
+      state: started
+      ports:
+      - "2200:8080"
+      volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+      tty: true
+      detach: true
